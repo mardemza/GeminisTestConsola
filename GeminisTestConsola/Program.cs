@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -108,6 +110,194 @@ namespace GeminisTestConsola
             Console.WriteLine("-------------------------------");
             Console.WriteLine("");
             #endregion
+
+            #region Ejercicio 3
+
+            // -- Init Vagones
+
+            var capacidad = 141;
+            var longitud = (decimal)15.4;
+            var alto = (decimal)3;
+            var ancho = capacidad / (longitud * alto);
+            var tren1ConVagones = new List<VagonModel>();
+
+            // -- Vagon 1
+            var vagon1 = new VagonModel
+            {
+                Longitud = longitud,
+                Alto = alto,
+                Ancho = ancho
+            };
+
+            // -- Vagon 2
+            var vagon2 = new VagonModel
+            {
+                Longitud = longitud,
+                Alto = alto,
+                Ancho = ancho
+            };
+
+            // -- Vagon 3
+            var vagon3 = new VagonModel
+            {
+                Longitud = longitud,
+                Alto = alto,
+                Ancho = ancho
+            };
+
+            tren1ConVagones.Add(vagon1);
+            tren1ConVagones.Add(vagon2);
+            tren1ConVagones.Add(vagon3);
+
+
+            // -- Cargar las cajas separadas por una "x" los tamaños y las cajas separadas por ";"
+            // -- Ejemplo: 3x3x2;2x3x2;4x3x3;2x2x4 n...
+
+            // -- Ingreso las cajas
+            var cajas = CargarCajas();
+
+            // -- Valido que no supere la capacidad
+            if (ValidarCapacidadTotalDeCajas(cajas, tren1ConVagones))
+                Console.WriteLine("Las cajas ingresadas superan la capacidad de los vagones");
+
+            // -- Distribuyo las cajas
+            DistribuirCajasEnVagones(cajas, tren1ConVagones);
+
+            // -- Imprimo el estado de los vagones
+            ImprimirTrenConVagones(tren1ConVagones);
+
+            #endregion
+        }
+
+        private static void ImprimirTrenConVagones(List<VagonModel> tren1ConVagones)
+        {
+            Console.WriteLine($"");
+            var indiceVagon = 1;
+            foreach (var vagon in tren1ConVagones)
+            {
+                Console.WriteLine($"- Vagon: {indiceVagon}");
+                Console.WriteLine($"-- Alto: {vagon.Alto} mts");
+                Console.WriteLine($"-- Ancho: {decimal.Round(vagon.Ancho,2)} mts");
+                Console.WriteLine($"-- Longitud: {vagon.Longitud} mts");
+                Console.WriteLine($"-- Capacidad: {decimal.Round(vagon.Capacidad,2)} m3");
+                Console.WriteLine($"-- Capacidad Ocupada: {decimal.Round(vagon.CapacidadOcupada,2)} m3");
+                Console.WriteLine($"-- Cantidad de cajas: {vagon.Cajas.Count}");
+                Console.WriteLine($"");
+                var indiceCaja = 1;
+                foreach (var caja in vagon.Cajas)
+                {
+                    Console.WriteLine($"--- Caja: {indiceCaja}");
+                    Console.WriteLine($"--- Alto: {caja.Alto} mts");
+                    Console.WriteLine($"--- Ancho: {decimal.Round(caja.Ancho,2)} mts");
+                    Console.WriteLine($"--- Longitud: {caja.Longitud} mts");
+                    Console.WriteLine($"--- Capacidad: {decimal.Round(caja.Capacidad,2)} m3");
+                    indiceCaja++;
+                    Console.WriteLine($"");
+                }
+                Console.WriteLine($"--------------------------------------------------");
+                indiceVagon++;
+            }
+            Console.WriteLine($"");
+        }
+
+        private static void DistribuirCajasEnVagones(List<TamanioModel> cajas, List<VagonModel> tren1)
+        {
+            // -- Recupero la primer caja con capacidad más chica
+            var cajaAdd = cajas.First();
+
+            // -- Recupero el vagon con capacidad ocupada más grande y le agrego la caja con menos capacidad.
+            tren1.OrderBy(x => x.CapacidadOcupada).First().Cajas.Add(cajaAdd);
+
+            // -- Remuevo la caja agregada
+            cajas.Remove(cajaAdd);
+
+            // -- Consulto si existen cajas y llamo al metodo recursivamente. 
+            if (cajas.Any())
+            {
+                DistribuirCajasEnVagones(cajas, tren1);
+            }
+        }
+
+        private static bool ValidarCapacidadTotalDeCajas(List<TamanioModel> cajas, List<VagonModel> tren)
+        {
+            var capacidadTotalDeTrenes = tren.Sum(tren => tren.Capacidad);
+            var capacidadTotalCajasIngresas = cajas.Sum(caja => caja.Capacidad);
+
+            Console.WriteLine(""); 
+
+            foreach (var caja in cajas)
+            {
+                Console.WriteLine($"Caja: {caja.Alto}x{caja.Ancho}x{caja.Longitud}, Capacidad: {caja.Capacidad}");
+            }
+
+            return (capacidadTotalCajasIngresas > capacidadTotalDeTrenes);
+        }
+
+        private static List<TamanioModel> CargarCajas()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Por favor ingrese las cajas separadas por una 'x' y ';'.");
+            Console.WriteLine("Ejemplo: 3x3x2;2x3x2;4x3x3;2x2x4 n...");
+            Console.WriteLine("Donde la representación de los datos es {alto}x{ancho}x{longitud}");
+            Console.WriteLine("");
+
+            var cajas = new List<TamanioModel>();
+            var lineas = Console.ReadLine().Split(";").Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+            try
+            {
+                foreach (var linea in lineas)
+                {
+                    var lineaCajas = linea.Split("x");
+
+                    var alto = decimal.Parse(lineaCajas[0]);
+                    var ancho = decimal.Parse(lineaCajas[1]);
+                    var longitud = decimal.Parse(lineaCajas[2]);
+
+                    var caja = new TamanioModel
+                    {
+                        Alto = alto,
+                        Ancho = ancho,
+                        Longitud = longitud
+                    };
+
+                    cajas.Add(caja);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error al leer los datos");
+                return CargarCajas();
+            }
+
+            return cajas;
+        }
+
+        public class TamanioModel
+        {
+            public decimal Alto { get; set; } = 0;
+            public decimal Ancho { get; set; } = 0;
+            public decimal Longitud { get; set; } = 0;
+            public decimal Capacidad
+            {
+                get
+                {
+                    return Alto * Ancho * Longitud;
+                }
+            }
+        }
+
+        public class VagonModel : TamanioModel
+        {
+            public List<TamanioModel> Cajas { get; set; } = new List<TamanioModel>();
+
+            public decimal CapacidadOcupada
+            {
+                get
+                {
+                    return Cajas.Sum(x => x.Capacidad);
+                }
+            }
         }
     }
 }

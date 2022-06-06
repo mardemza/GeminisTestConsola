@@ -8,8 +8,8 @@
 - Proyecto para 3 ejercicios
 - Debe tener instalado NET 5
 
-### Ejercicio 1
-*Descripción:* \
+## Ejercicio 1
+**Descripción:** \
 Imprimir un tablero de damas donde la "X" representa el color negro y el "_" representa el blanco. 
 El tablero debe tener n x n casillas. Por ejemplo, para n=5 el tablero se vería así:
 
@@ -29,8 +29,8 @@ hacer clic en el botón de actualización junto a él para volver al valor origi
 para validar su código durante la prueba. Tenga en cuenta que el código debe imprimir los resultados 
 exactamente como se muestra con el fin de que la pregunta sea considerada valida durante la prueba.
 
-### Ejercicio 2
-*Descripción:* \
+## Ejercicio 2
+**Descripción:** \
 Se tiene una X en la esquina superior izquierda de un área de 4x4. Se tiene una matriz con 10 elementos. 
 Cada 2 elementos de la matriz corresponden a un movimiento, el primero en el eje horizontal y el segundo 
 en el eje vertical. El número indica las unidades a moverse y el signo la dirección (positivo para derecha 
@@ -49,3 +49,23 @@ OOOO
 OOOO
 OOOO
 ```
+
+## Ejercicio 3
+**Descripción:** \
+Dados 3 vagones de tren determinar: 
+1. Factibilidad de carga en el tren.
+2. A mejor manera de cargar los tres vagones saturando de la mejor manera el espacio de los 3 en forma pareja de modo tal que el peso quede distribuido lo más uniformemente posible. (de esta parte del problema se puede presentar como solución un pseudocódigo)
+
+**Nota:** Las cajas contienen elementos cuya densidad es similar (una caja más chica es necesariamente más liviana que una más grande, es decir no hay que tener en cuenta el peso más que por el tamaño).
+
+Precargado, 3 vagones de tipo \
+Longitud 15.4 mts. \
+Longitud con acoples 17.1 mts. \
+Altura 3.0 mts \
+Capacidad 141 m3 \
+Peso neto sin carga 29 ton \
+
+**Input:**
+Cargar cajas ingresadas por teclado hasta que las dimensiones de la caja ingresada sean cero.
+Las dimensiones de cada caja son largo, ancho y profundidad.
+El sistema debe asegurarse que se cargó correctamente todas las cajas antes de procesar.
