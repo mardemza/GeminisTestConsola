@@ -112,6 +112,8 @@ namespace GeminisTestConsola
             #endregion
 
             #region Ejercicio 3
+            Console.WriteLine("Ej.3:");
+            Console.WriteLine("");
 
             // -- Init Vagones
 
@@ -160,6 +162,11 @@ namespace GeminisTestConsola
             if (ValidarCapacidadTotalDeCajas(cajas, tren1ConVagones))
                 Console.WriteLine("Las cajas ingresadas superan la capacidad de los vagones");
 
+            Console.WriteLine("");
+            Console.WriteLine("Result:");
+            Console.WriteLine("");
+            Console.WriteLine($"--------------------------------------------------");
+
             // -- Distribuyo las cajas
             DistribuirCajasEnVagones(cajas, tren1ConVagones);
 
@@ -170,11 +177,11 @@ namespace GeminisTestConsola
         }
 
         private static void ImprimirTrenConVagones(List<VagonModel> tren1ConVagones)
-        {
-            Console.WriteLine($"");
+        {            
             var indiceVagon = 1;
             foreach (var vagon in tren1ConVagones)
             {
+                Console.WriteLine($"");
                 Console.WriteLine($"- Vagon: {indiceVagon}");
                 Console.WriteLine($"-- Alto: {vagon.Alto} mts");
                 Console.WriteLine($"-- Ancho: {decimal.Round(vagon.Ancho,2)} mts");
@@ -187,10 +194,10 @@ namespace GeminisTestConsola
                 foreach (var caja in vagon.Cajas)
                 {
                     Console.WriteLine($"--- Caja: {indiceCaja}");
-                    Console.WriteLine($"--- Alto: {caja.Alto} mts");
-                    Console.WriteLine($"--- Ancho: {decimal.Round(caja.Ancho,2)} mts");
-                    Console.WriteLine($"--- Longitud: {caja.Longitud} mts");
-                    Console.WriteLine($"--- Capacidad: {decimal.Round(caja.Capacidad,2)} m3");
+                    Console.WriteLine($"---- Alto: {caja.Alto} mts");
+                    Console.WriteLine($"---- Ancho: {decimal.Round(caja.Ancho,2)} mts");
+                    Console.WriteLine($"---- Longitud: {caja.Longitud} mts");
+                    Console.WriteLine($"---- Capacidad: {decimal.Round(caja.Capacidad,2)} m3");
                     indiceCaja++;
                     Console.WriteLine($"");
                 }
@@ -237,7 +244,7 @@ namespace GeminisTestConsola
         {
             Console.WriteLine("");
             Console.WriteLine("Por favor ingrese las cajas separadas por una 'x' y ';'.");
-            Console.WriteLine("Ejemplo: 3x3x2;2x3x2;4x3x3;2x2x4 n...");
+            Console.WriteLine("Ejemplo: 3x3x2;2x3x2;3x2x4;4x3x3;2x2x4 n...");
             Console.WriteLine("Donde la representación de los datos es {alto}x{ancho}x{longitud}");
             Console.WriteLine("");
 
@@ -248,11 +255,15 @@ namespace GeminisTestConsola
             {
                 foreach (var linea in lineas)
                 {
-                    var lineaCajas = linea.Split("x");
+                    var lineaCajas = linea.ToLower().Split("x");
+
+                    if (!lineaCajas.Any() || lineaCajas.Length != 3) throw new Exception("Error");
 
                     var alto = decimal.Parse(lineaCajas[0]);
                     var ancho = decimal.Parse(lineaCajas[1]);
                     var longitud = decimal.Parse(lineaCajas[2]);
+
+                    if (alto < 0 || ancho < 0 || longitud < 0) throw new Exception("Error");
 
                     var caja = new TamanioModel
                     {
